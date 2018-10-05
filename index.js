@@ -15,12 +15,13 @@ var server = http.createServer((req,res) => {
     var path = parsedUrl.pathname;
     var trimmedPath = path.replace(/ˆ\/+|\/+$/g,'');
     var method = req.method.toUpperCase();
+    var queryStringObject = parsedUrl.query;
 
     // Send response
     res.end('Hello world\n')
 
     // Log request path
-    console.log(`Request received on path: ${trimmedPath} with method: ${method}`); 
+    console.log(`Request received on path: ${trimmedPath} with method: ${method} and with these query string parameters:`, queryStringObject); 
 });
 
 
