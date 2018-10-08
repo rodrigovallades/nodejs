@@ -5,36 +5,65 @@
  */
 
 // Dependencies
-var http = require('http');
-var url = require('url');
-var StringDecoder = require('string_decoder').StringDecoder;
+const http = require('http');
+const url = require('url');
+const StringDecoder = require('string_decoder').StringDecoder;
 
 // The server should respond to all requests with a string 
-var server = http.createServer((req,res) => {
+const server = http.createServer((req,res) => {
 
-    var parsedUrl = url.parse(req.url, true);
-    var path = parsedUrl.pathname;
-    var trimmedPath = path.replace(/ˆ\/+|\/+$/g,'');
-    var method = req.method.toUpperCase();
-    var queryStringObject = parsedUrl.query;
-    var headers = req.headers;
-    var decoder = new StringDecoder('utf-8');
-    var buffer = '';
+    const parsedUrl = url.parse(req.url, true);
+    const path = parsedUrl.pathname;
+    const trimmedPath = path.replace(/^\/+|\/+$/g,'');
+    const method = req.method.toUpperCase();
+    const queryStringObject = parsedUrl.query;
+    const headers = req.headers;
+    const decoder = new StringDecoder('utf-8');
+    let buffer = '';
 
     // Get the payload, if any
     req.on('data', data => buffer += decoder.write(data))
     req.on('end', () => {
+
         buffer += decoder.end();
 
-        // Send response
-        res.end('Hello world\n')
+        // Choose request handler
+        const handler = router.hasOwnProperty(trimmedPath) ? router[trimmedPath] : handlers.notFound;
 
-        // Log request path
-        console.log(`Request received on path: ${trimmedPath} with method: ${method} and with these query string parameters:`, queryStringObject); 
-        console.log(`Request headers:`, headers);
-        console.log(`Request payload:`, buffer); 
+        // Data objecdt to send to the handler
+        const data = {
+            trimmedPath,
+            queryStringObject,
+            method,
+            headers,
+            payload: buffer
+        };
+
+        handler(data, (statusCode, payload) => {
+            
+            statusCode = typeof(statusCode) === 'number' ? statusCode : 200;
+            payload = typeof(payload) === 'object' ? payload : {};
+
+            const payloadString = JSON.stringify(payload);
+
+            res.writeHead(statusCode);
+            res.end(payloadString);
+
+            console.log(`Return this response:`, statusCode, payloadString); 
+        });
     });
 });
 
 // Start the server and have it listen on port 3000
-server.listen(3000, () => console.log('The server is listening on port 3000 now') )
+server.listen(3000, () => console.log('The server is listening on port 3000 now'));
+
+// Handlers callback a http status code and a payload object
+const handlers = {
+    sample: (data, callback) => callback(406, { name: 'sample handler' }),
+    notFound: (data, callback) => callback(404),
+};
+
+// Define a request router
+const router = {
+    sample: handlers.sample,
+};
