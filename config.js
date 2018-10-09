@@ -3,16 +3,16 @@
  *
  */
 
- const environments = {
-     staging: {
-        port: 3000,
-        envName: 'staging',
-     },
-     production: {
-         port: 5000,
-         envName: 'production',
-     },
- };
+const environments = {
+  staging: {
+    port: 3000,
+    envName: 'staging',
+  },
+  production: {
+    port: 5000,
+    envName: 'production',
+  },
+};
 
 const currentEnvironment = !!process.env.NODE_ENV ? process.env.NODE_ENV.toLowerCase() : '';
 
