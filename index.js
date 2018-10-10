@@ -11,6 +11,23 @@ const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
 const config = require('./config');
 const fs = require('fs');
+var _data = require('./lib/data');
+
+_data.create('test', 'newFile', { foo: 'bar'}, (err) =>
+  console.log('error:', err)
+);
+
+_data.update('test', 'newFile', { fizz: 'buzz'}, (err, data) =>
+  err ? console.log('error:', err) : console.log('file updated')
+);
+
+_data.read('test', 'newFile', (err, data) =>
+  err ? console.log('error:', err) : console.log('file contents:', data)
+);
+
+_data.delete('test', 'newFile', (err) => {
+  err ? console.log('error:', err) : console.log('file removed');
+})
 
 // Instantiating the HTTP server
 const httpServer = http.createServer((req,res) => {
