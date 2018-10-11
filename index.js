@@ -9,25 +9,10 @@ const http = require('http');
 const https = require('http');
 const url = require('url');
 const StringDecoder = require('string_decoder').StringDecoder;
-const config = require('./config');
+const config = require('./lib/config');
 const fs = require('fs');
-var _data = require('./lib/data');
-
-_data.create('test', 'newFile', { foo: 'bar'}, (err) =>
-  console.log('error:', err)
-);
-
-_data.update('test', 'newFile', { fizz: 'buzz'}, (err, data) =>
-  err ? console.log('error:', err) : console.log('file updated')
-);
-
-_data.read('test', 'newFile', (err, data) =>
-  err ? console.log('error:', err) : console.log('file contents:', data)
-);
-
-_data.delete('test', 'newFile', (err) => {
-  err ? console.log('error:', err) : console.log('file removed');
-})
+const handlers = require('./lib/handlers');
+const helpers = require('./lib/helpers');
 
 // Instantiating the HTTP server
 const httpServer = http.createServer((req,res) => {
@@ -76,7 +61,7 @@ const unifiedServer = (req, res) => {
       queryStringObject,
       method,
       headers,
-      payload: buffer
+      payload: helpers.parseJsonToObject(buffer),
     };
 
     handler(data, (statusCode, payload) => {
@@ -95,13 +80,8 @@ const unifiedServer = (req, res) => {
   });
 };
 
-// Handlers callback a http status code and a payload object
-const handlers = {
-  ping: (data, callback) => callback(200, { ping: new Date() }),
-  notFound: (data, callback) => callback(404),
-};
-
 // Define a request router
 const router = {
   ping: handlers.ping,
+  users: handlers.users,
 };
