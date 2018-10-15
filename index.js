@@ -55,7 +55,7 @@ const unifiedServer = (req, res) => {
     // Choose request handler
     const handler = router.hasOwnProperty(trimmedPath) ? router[trimmedPath] : handlers.notFound;
 
-    // Data objecdt to send to the handler
+    // Data object to send to the handler
     const data = {
       trimmedPath,
       queryStringObject,
@@ -84,4 +84,5 @@ const unifiedServer = (req, res) => {
 const router = {
   ping: handlers.ping,
   users: handlers.users,
+  tokens: handlers.tokens,
 };
