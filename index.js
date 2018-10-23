@@ -36,7 +36,7 @@ const httpsServer = https.createServer(httpsServerOptions, (req,res) => {
 httpsServer.listen(config.httpsPort, () => console.log(`The server is listening on port ${config.httpsPort} in ${config.envName} mode`));
 
 const unifiedServer = (req, res) => {
-  
+
   const parsedUrl = url.parse(req.url, true);
   const path = parsedUrl.pathname;
   const trimmedPath = path.replace(/^\/+|\/+$/g,'');
@@ -75,7 +75,7 @@ const unifiedServer = (req, res) => {
       res.writeHead(statusCode);
       res.end(payloadString);
 
-      console.log(`Return this response:`, statusCode, payloadString); 
+      console.log(`Return this response:`, statusCode, payloadString);
     });
   });
 };
