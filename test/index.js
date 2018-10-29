@@ -88,7 +88,7 @@ _app.runTests = () => {
               console.log('\x1b[31m%s\x1b[0m', tmpTestName);
               counter++;
 
-              if (counter = limit) {
+              if (counter == limit) {
                 _app.produceTestReport(limit, successes, errors);
               }
             }
