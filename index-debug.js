@@ -11,7 +11,7 @@
 const server = require('./lib/server');
 const workers = require('./lib/workers');
 const cli = require('./lib/cli');
-const exampleDebuggingProblen = require('./lib/exampleDebuggingProblem');
+const exampleDebuggingProblem = require('./lib/exampleDebuggingProblem');
 
 // Declare the app
 var app = {};
