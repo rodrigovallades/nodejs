@@ -52,8 +52,8 @@ app.init = () => {
   debugger;
 
   // Call the init script that will throw
-  exampleDebuggingProblem.init();
-  console.log('Just called the library');
+  // exampleDebuggingProblem.init();
+  // console.log('Just called the library');
 
   debugger;
 };
