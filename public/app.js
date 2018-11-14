@@ -28,8 +28,8 @@ app.client.request = (headers, path, method, queryStringObject, payload, callbac
   callback = typeof(callback) === 'function' ? callback : false;
 
   // For each query string parameter sent, add it the path
-  const requestUrl = `${path}?`;
-  const counter = 0;
+  let requestUrl = `${path}?`;
+  let counter = 0;
 
   for (const queryKey in queryStringObject) {
     if (queryStringObject.hasOwnProperty(queryKey)) {
@@ -77,8 +77,37 @@ app.client.request = (headers, path, method, queryStringObject, payload, callbac
 
   // Send the payload as JSON
   const payloadString = JSON.stringify(payload);
-
   xhr.send(payloadString);
+};
+
+// Bind the logout button
+app.bindLogoutButton = () => {
+  document.getElementById("logoutButton").addEventListener("click", function(e){
+
+    // Stop it from redirecting anywhere
+    e.preventDefault();
+
+    // Log the user out
+    app.logUserOut();
+  });
+};
+
+// Log the user out then redirect them
+app.logUserOut = () => {
+  // Get the current token id
+  const tokenId = typeof(app.config.sessionToken.id) === 'string' ? app.config.sessionToken.id : false;
+
+  // Send the current token to the tokens endpoint to delete it
+  const queryStringObject = {
+    'id': tokenId,
+  };
+  app.client.request(undefined, 'api/tokens', 'DELETE', queryStringObject, undefined, function(statusCode, responsePayload){
+    // Set the app.config token as false
+    app.setSessionToken(false);
+
+    // Send the user to the logged out page
+    window.location = '/session/deleted';
+  });
 };
 
 // Bind the forms
@@ -257,6 +286,9 @@ app.init = () => {
 
   // Bind all form submissions
   app.bindForms();
+
+  // Bind logout button
+  app.bindLogoutButton();
 
   // Get the token from localstorage
   app.getSessionToken();
