@@ -20,5 +20,8 @@
   "bugs": {
     "url": "https://github.com/rodrigovallades/nodejs/issues"
   },
-  "homepage": "https://github.com/rodrigovallades/nodejs#readme"
+  "homepage": "https://github.com/rodrigovallades/nodejs#readme",
+  "engines": {
+    "node": "10.x"
+  }
 }
